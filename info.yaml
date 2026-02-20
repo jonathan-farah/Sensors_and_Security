@@ -24,7 +24,7 @@ project:
   source_files:
     - moving_average_filter_tt.sv
   
-  top_module: "moving_average_filter_tt"
+  top_module: "tt_um_jonathan_farah_moving_average_filter"
 
 # Documentation
 documentation:
@@ -205,7 +205,7 @@ build:
   # For Tiny Tapeout, this specifies the build flow
   # Uses OpenLane for ASIC synthesis
   target: "sky130"  # SkyWater 130nm PDK
-  top_module: "moving_average_filter_tt"
+  top_module: "tt_um_jonathan_farah_moving_average_filter"
   
   # Synthesis parameters
   clock_period_ns: 20  # 50 MHz (conservative for Tiny Tapeout)

@@ -16,7 +16,7 @@
 //   Bidir (8):   data_in[7:2], result_out[7:5], state[1:0]
 // =============================================================================
 
-module moving_average_filter_tt #(
+module tt_um_jonathan_farah_moving_average_filter #(
     parameter DATA_WIDTH = 8,           // 8-bit data for Tiny Tapeout
     parameter MAX_TAPS = 15             // Maximum number of filter taps (1-15)
 )(

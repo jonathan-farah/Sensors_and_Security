@@ -84,7 +84,7 @@ module tb_moving_average_filter_tt;
     // =========================================================================
     // DUT Instantiation
     // =========================================================================
-    moving_average_filter_tt #(
+    tt_um_jonathan_farah_moving_average_filter #(
         .DATA_WIDTH(DATA_WIDTH),
         .MAX_TAPS(MAX_TAPS)
     ) dut (

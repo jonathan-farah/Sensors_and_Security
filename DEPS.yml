@@ -136,7 +136,7 @@ tb_moving_average_filter:
 filter_tt:
   deps:
     - moving_average_filter_tt.sv
-  top: moving_average_filter_tt
+  top: tt_um_jonathan_farah_moving_average_filter
 
 # Moving Average Filter Tiny Tapeout Testbench
 tb_moving_average_filter_tt:
