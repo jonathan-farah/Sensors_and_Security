@@ -1,0 +1,17 @@
+=== Command: Get-ChildItem simulation_results\sim_2026-02-19T04-29-02-713Z (2026-02-19T04:31:31.713Z) ===
+Exit Code: 0
+Output:
+
+
+    Directory: C:\Users\Owner\Sensors_and_Security\simulation_results\sim_2026-02-19T04-29-02-713Z
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----         2/18/2026  11:29 PM          10613 dumpfile.fst                                                         
+-a----         2/18/2026  11:29 PM          11768 eda_results.json                                                     
+
+
+
+=== End Output ===
+

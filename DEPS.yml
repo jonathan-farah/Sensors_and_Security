@@ -1,0 +1,130 @@
+# =============================================================================
+# Smart Low-Power Proximity Sensor SoC - Build Dependencies
+# =============================================================================
+# Description: DEPS configuration for compiling all RTL modules
+# Author: Cognichip Co-Designer
+# =============================================================================
+
+# Individual RTL Modules
+# -----------------------------------------------------------------------------
+
+# Register File Module
+regfile:
+  deps:
+    - proximity_sensor_regfile.sv
+
+# Moving Average Filter Module
+filter:
+  deps:
+    - moving_average_filter.sv
+
+# Threshold Comparator Module
+comparator:
+  deps:
+    - threshold_comparator.sv
+
+# Power Management FSM Module
+power_mgmt:
+  deps:
+    - power_management_fsm.sv
+
+# Communication Interface Module
+comm_interface:
+  deps:
+    - communication_interface.sv
+
+# Security Module
+security:
+  deps:
+    - security_module.sv
+
+# ADC Interface Controller Module
+adc_controller:
+  deps:
+    - adc_interface_controller.sv
+
+# Data FIFO Buffer Module
+data_fifo:
+  deps:
+    - data_fifo_buffer.sv
+
+# Clock and Reset Manager Module
+clock_reset_mgr:
+  deps:
+    - clock_reset_manager.sv
+
+# Calibration Engine Module
+calibration:
+  deps:
+    - calibration_engine.sv
+
+# Watchdog Timer Module
+watchdog:
+  deps:
+    - watchdog_timer.sv
+
+# Interrupt Controller Module
+interrupt_ctrl:
+  deps:
+    - interrupt_controller.sv
+
+# Complete SoC Integration
+# -----------------------------------------------------------------------------
+
+# Top-level SoC (includes all subsystems)
+proximity_sensor_soc:
+  deps:
+    - proximity_sensor_regfile.sv
+    - moving_average_filter.sv
+    - threshold_comparator.sv
+    - power_management_fsm.sv
+    - communication_interface.sv
+    - security_module.sv
+    - proximity_sensor_soc.sv
+  top: proximity_sensor_soc
+  defines:
+    SIMULATION: 1
+    DATA_WIDTH: 32
+
+# Enhanced SoC with New Infrastructure Modules
+proximity_sensor_soc_enhanced:
+  deps:
+    - adc_interface_controller.sv
+    - data_fifo_buffer.sv
+    - clock_reset_manager.sv
+    - calibration_engine.sv
+    - watchdog_timer.sv
+    - interrupt_controller.sv
+    - proximity_sensor_regfile.sv
+    - moving_average_filter.sv
+    - threshold_comparator.sv
+    - power_management_fsm.sv
+    - communication_interface.sv
+    - security_module.sv
+    - proximity_sensor_soc.sv
+  top: proximity_sensor_soc
+  defines:
+    SIMULATION: 1
+    DATA_WIDTH: 32
+    ENHANCED_MODE: 1
+
+# Design Verification Targets
+# -----------------------------------------------------------------------------
+
+# ADC Interface Controller Testbench
+tb_adc_controller:
+  deps:
+    - adc_interface_controller.sv
+    - tb_adc_interface_controller.sv
+  top: tb_adc_interface_controller
+  defines:
+    SIMULATION: 1
+
+# Moving Average Filter Testbench
+tb_moving_average_filter:
+  deps:
+    - moving_average_filter.sv
+    - tb_moving_average_filter.sv
+  top: tb_moving_average_filter
+  defines:
+    SIMULATION: 1

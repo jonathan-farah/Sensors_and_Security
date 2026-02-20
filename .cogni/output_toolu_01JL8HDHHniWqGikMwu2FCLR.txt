@@ -1,0 +1,16 @@
+=== Command: Get-Content simulation_results\sim_2026-02-19T04-24-52-960Z\compile.log -Tail 50 (2026-02-19T04:25:11.759Z) ===
+Exit Code: 1
+Output:
+Get-Content : Cannot find path 
+'C:\Users\Owner\Sensors_and_Security\simulation_results\sim_2026-02-19T04-24-52-960Z\compile.log' because it does not 
+exist.
+At line:1 char:1
++ Get-Content simulation_results\sim_2026-02-19T04-24-52-960Z\compile.l ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\Owner\...60Z\compile.log:String) [Get-Content], ItemNotFoundEx 
+   ception
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetContentCommand
+ 
+
+=== End Output ===
+

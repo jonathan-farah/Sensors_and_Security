@@ -1,0 +1,14 @@
+=== Command: type simulation_results\sim_2026-02-19T04-24-52-960Z\compile.log | tail -50 (2026-02-19T04:25:03.493Z) ===
+Exit Code: 1
+Output:
+tail : The term 'tail' is not recognized as the name of a cmdlet, function, script file, or operable program. Check 
+the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:68
++ ... imulation_results\sim_2026-02-19T04-24-52-960Z\compile.log | tail -50
++                                                                  ~~~~
+    + CategoryInfo          : ObjectNotFound: (tail:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+
+=== End Output ===
+
