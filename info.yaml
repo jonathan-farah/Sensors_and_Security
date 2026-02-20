@@ -16,6 +16,15 @@ project:
   description: "8-bit hardware-efficient moving average filter with configurable tap count (1-15), circular buffer architecture, and power-optimized sequential accumulation for sensor data processing. Optimized for Tiny Tapeout pin constraints."
   language: "SystemVerilog"
   clock_hz: 50000000  # 50 MHz target clock frequency (conservative for Tiny Tapeout)
+  
+  # Tiles configuration (REQUIRED for Tiny Tapeout)
+  tiles: "1x1"  # Single tile design
+  
+  # Top module source file
+  source_files:
+    - moving_average_filter_tt.sv
+  
+  top_module: "moving_average_filter_tt"
 
 # Documentation
 documentation:
@@ -105,15 +114,6 @@ documentation:
   # Images (optional)
   # cover_image: "docs/moving_average_filter_diagram.png"
   # screenshot: "docs/waveform_screenshot.png"
-  
-  # URLs
-  source_files:
-    - moving_average_filter_tt.sv
-    - tb_moving_average_filter_tt.sv
-    - moving_average_filter.sv
-    - tb_moving_average_filter.sv
-  
-  top_module: "moving_average_filter_tt"
   
   # Git information
   repo: "https://github.com/jonathan-farah/Sensors_and_Security"
