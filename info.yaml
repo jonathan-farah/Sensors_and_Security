@@ -6,6 +6,9 @@
 # Repository: git@github.com:jonathan-farah/Sensors_and_Security.git
 # ========================================================================
 
+# Tiny Tapeout YAML version (REQUIRED)
+yaml_version: 6
+
 # Tiny Tapeout project information
 project:
   title: "Moving Average Filter - Configurable Digital Signal Processor"
