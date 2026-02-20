@@ -22,7 +22,7 @@ project:
   
   # Top module source file
   source_files:
-    - moving_average_filter_tt.sv
+    - src/tt_um_jonathan_farah_moving_average_filter.sv
   
   top_module: "tt_um_jonathan_farah_moving_average_filter"
 

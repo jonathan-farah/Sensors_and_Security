@@ -1,0 +1,31 @@
+name: gds
+# Run GDS workflow on main and tag pushes, and on pull requests
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  gds:
+    env:
+      PDK_ROOT: /home/runner/pdk
+      OPENLANE2_ROOT: /home/runner/openlane2
+      PDK: sky130A
+
+    # ubuntu
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Build GDS
+      uses: TinyTapeout/tt-gds-action@tt08
+      with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
