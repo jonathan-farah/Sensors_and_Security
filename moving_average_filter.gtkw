@@ -1,0 +1,75 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] 
+[dumpfile] "simulation_results/latest/dumpfile.fst"
+[savefile] "moving_average_filter.gtkw"
+[timestart] 0
+[size] 1920 1080
+[pos] -1 -1
+*-18.000000 200 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_moving_average_filter.
+[treeopen] tb_moving_average_filter.dut.
+[sst_width] 300
+[signals_width] 250
+[sst_expanded] 1
+[sst_vpaned_height] 500
+
+@28
+tb_moving_average_filter.clock
+@200
+-
+@28
+tb_moving_average_filter.reset
+tb_moving_average_filter.enable
+@200
+-
+-Input Interface
+@28
+tb_moving_average_filter.data_valid
+@22
+tb_moving_average_filter.data_in[31:0]
+@28
+tb_moving_average_filter.data_ready
+@200
+-
+-Control
+@22
+tb_moving_average_filter.num_taps[3:0]
+@200
+-
+-State Machine
+@28
+tb_moving_average_filter.dut.current_state[1:0]
+@22
+tb_moving_average_filter.dut.accumulate_counter[3:0]
+@28
+tb_moving_average_filter.dut.computing
+tb_moving_average_filter.busy
+@200
+-
+-Internal Buffer
+@22
+tb_moving_average_filter.dut.write_ptr[3:0]
+tb_moving_average_filter.dut.valid_samples[3:0]
+tb_moving_average_filter.dut.delay_line[0][31:0]
+tb_moving_average_filter.dut.delay_line[1][31:0]
+tb_moving_average_filter.dut.delay_line[2][31:0]
+tb_moving_average_filter.dut.delay_line[3][31:0]
+@200
+-
+-Computation
+@22
+tb_moving_average_filter.dut.sum_accumulator[31:0]
+tb_moving_average_filter.dut.filtered_result[31:0]
+@200
+-
+-Output Interface
+@28
+tb_moving_average_filter.result_valid
+@22
+tb_moving_average_filter.result_out[31:0]
+@200
+-
+
+[pattern_trace] 1
+[pattern_trace] 0

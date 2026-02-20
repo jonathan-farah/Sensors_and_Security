@@ -120,11 +120,29 @@ tb_adc_controller:
   defines:
     SIMULATION: 1
 
-# Moving Average Filter Testbench
+# Moving Average Filter Testbench (32-bit Original)
 tb_moving_average_filter:
   deps:
     - moving_average_filter.sv
     - tb_moving_average_filter.sv
   top: tb_moving_average_filter
+  defines:
+    SIMULATION: 1
+
+# Tiny Tapeout Targets
+# -----------------------------------------------------------------------------
+
+# Moving Average Filter for Tiny Tapeout (8-bit)
+filter_tt:
+  deps:
+    - moving_average_filter_tt.sv
+  top: moving_average_filter_tt
+
+# Moving Average Filter Tiny Tapeout Testbench
+tb_moving_average_filter_tt:
+  deps:
+    - moving_average_filter_tt.sv
+    - tb_moving_average_filter_tt.sv
+  top: tb_moving_average_filter_tt
   defines:
     SIMULATION: 1

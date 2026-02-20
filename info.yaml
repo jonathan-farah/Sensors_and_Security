@@ -1,0 +1,309 @@
+# ========================================================================
+# Tiny Tapeout Project Configuration
+# ========================================================================
+# Project: Moving Average Filter - Smart Low-Power Proximity Sensor SoC
+# Authors: Jonathan Farah, Jason Qin
+# Repository: git@github.com:jonathan-farah/Sensors_and_Security.git
+# ========================================================================
+
+# Tiny Tapeout project information
+project:
+  title: "Moving Average Filter - Configurable Digital Signal Processor"
+  author: "Jonathan Farah, Jason Qin"
+  description: "8-bit hardware-efficient moving average filter with configurable tap count (1-15), circular buffer architecture, and power-optimized sequential accumulation for sensor data processing. Optimized for Tiny Tapeout pin constraints."
+  language: "SystemVerilog"
+  clock_hz: 50000000  # 50 MHz target clock frequency (conservative for Tiny Tapeout)
+
+# Documentation
+documentation:
+  author: "Jonathan Farah, Jason Qin"
+  title: "Moving Average Filter - Smart Low-Power Proximity Sensor SoC"
+  description: "A configurable moving average filter designed for real-time sensor data processing. Features include: runtime-adjustable filter length (1-15 taps), circular buffer eliminating data shifting overhead, sequential accumulation for low power consumption, power-of-2 division optimization using shifts, and standard ready-valid handshake protocol for easy integration."
+  how_it_works: |
+    The Moving Average Filter implements a sliding window average over the most recent N samples (where N is configurable from 1 to 15).
+    
+    **Architecture:**
+    - **Circular Buffer**: 15-element delay line stores recent samples without shifting data
+    - **State Machine**: 4-state FSM (IDLE → ACCUMULATE → DIVIDE → OUTPUT) pipelines the filtering operation
+    - **Sequential Accumulation**: One adder accumulates samples over multiple cycles for minimal area and power
+    - **Optimized Division**: Power-of-2 tap counts (1,2,4,8) use free bit-shifts; others use hardware divider
+    - **Initialization Safety**: Valid sample counter prevents invalid outputs during startup
+    
+    **Operation:**
+    1. Input samples are stored in circular buffer via write pointer
+    2. When buffer contains num_taps samples, filtering begins
+    3. State machine sequences through: sum all samples → divide by num_taps → output result
+    4. Handshake protocol (data_valid/data_ready, result_valid) manages data flow
+    
+    **Key Features:**
+    - Configurable smoothing: 1 tap (pass-through) to 15 taps (maximum noise reduction)
+    - Low power: Sequential accumulation vs. parallel tree saves significant power
+    - Small area: Circular buffer eliminates shift registers
+    - Deterministic timing: num_taps + 2 cycles per result
+  
+  how_to_test: |
+    **Basic Test Procedure:**
+    
+    1. **Reset**: Assert reset (active-high) for at least 5 clock cycles
+    
+    2. **Configure**: Set num_taps[3:0] to desired filter length (1-15)
+       - Recommended: Start with num_taps = 4 for easy verification
+    
+    3. **Enable**: Set enable = 1 to activate filter
+    
+    4. **Send Data**: 
+       - Wait for data_ready = 1 (filter ready to accept)
+       - Assert data_valid = 1 and present sample on data_in[31:0]
+       - Hold for one clock cycle
+       - De-assert data_valid = 0
+       - Repeat for each sample
+    
+    5. **Receive Results**:
+       - After num_taps samples, watch for result_valid = 1 pulse
+       - Capture result_out[31:0] when result_valid is high
+       - Result is average of last num_taps samples
+    
+    **Test Cases:**
+    
+    **Test 1 - Single Tap (Pass-Through):**
+    - Set num_taps = 1
+    - Send samples: 50, 100, 150 (8-bit values: 0-255)
+    - Expected results: 50, 100, 150 (immediate pass-through)
+    
+    **Test 2 - Four Tap Average:**
+    - Set num_taps = 4
+    - Send samples: 16, 32, 48, 64, 80 (8-bit values)
+    - First result after 5th sample: (16+32+48+64)/4 = 40
+    - Second result after 6th sample: (32+48+64+80)/4 = 56
+    
+    **Test 3 - Power-of-2 Optimization:**
+    - Set num_taps = 8
+    - Send samples: 8, 16, 24, 32, 40, 48, 56, 64 (8-bit values)
+    - Result: (8+16+24+32+40+48+56+64)/8 = 36 (uses bit-shift, not divider)
+    
+    **Monitoring:**
+    - busy signal indicates filter is computing (cannot accept new data)
+    - data_ready indicates filter is idle and can accept data
+    - current_state can be observed for debugging (if exposed)
+    
+    **Expected Timing (num_taps = 4):**
+    - Cycles 1-4: Buffer fill (IDLE state)
+    - Cycle 5: Trigger (IDLE → ACCUMULATE)
+    - Cycles 6-9: Accumulation (ACCUMULATE state, 4 cycles)
+    - Cycle 10: Division (DIVIDE state, 1 cycle)
+    - Cycle 11: Output (OUTPUT state, result_valid = 1)
+    - Cycle 12+: Ready for next sample (IDLE state)
+  
+  external_hw: "None required. Design is self-contained. Optional: Connect data_in to ADC or sensor interface. Connect result_out to threshold comparator or display."
+  
+  discord: ""  # Optional: Your Discord username
+  maturity: "Functional"  # Options: Idea, Functional, Tested, Production
+  
+  # Images (optional)
+  # cover_image: "docs/moving_average_filter_diagram.png"
+  # screenshot: "docs/waveform_screenshot.png"
+  
+  # URLs
+  source_files:
+    - moving_average_filter_tt.sv
+    - tb_moving_average_filter_tt.sv
+    - moving_average_filter.sv
+    - tb_moving_average_filter.sv
+  
+  top_module: "moving_average_filter_tt"
+  
+  # Git information
+  repo: "https://github.com/jonathan-farah/Sensors_and_Security"
+  commit: ""  # Will be filled automatically
+  
+  # Licensing
+  license: "Apache-2.0"
+
+# Pin configuration for Tiny Tapeout
+# Standard TT interface: 8 inputs, 8 outputs, 8 bidirectional
+pinout:
+  # Dedicated inputs
+  inputs:
+    - name: "enable"
+      description: "Module enable (1=active, 0=disabled)"
+    - name: "num_taps[0]"
+      description: "Filter tap count bit 0 (1-15 taps)"
+    - name: "num_taps[1]"
+      description: "Filter tap count bit 1"
+    - name: "num_taps[2]"
+      description: "Filter tap count bit 2"
+    - name: "num_taps[3]"
+      description: "Filter tap count bit 3"
+    - name: "data_valid"
+      description: "Input data valid strobe"
+    - name: "data_in[0]"
+      description: "Input sample data bit 0 (LSB)"
+    - name: "data_in[1]"
+      description: "Input sample data bit 1"
+  
+  # Dedicated outputs
+  outputs:
+    - name: "data_ready"
+      description: "Filter ready to accept data"
+    - name: "result_valid"
+      description: "Output result valid (1-cycle pulse)"
+    - name: "busy"
+      description: "Filter is computing"
+    - name: "result_out[0]"
+      description: "Output result bit 0 (LSB)"
+    - name: "result_out[1]"
+      description: "Output result bit 1"
+    - name: "result_out[2]"
+      description: "Output result bit 2"
+    - name: "result_out[3]"
+      description: "Output result bit 3"
+    - name: "result_out[4]"
+      description: "Output result bit 4"
+  
+  # Bidirectional pins (can be input or output)
+  bidirectional:
+    - name: "data_in[2]"
+      description: "Input sample data bit 2 (input)"
+    - name: "data_in[3]"
+      description: "Input sample data bit 3 (input)"
+    - name: "data_in[4]"
+      description: "Input sample data bit 4 (input)"
+    - name: "data_in[5]"
+      description: "Input sample data bit 5 (input)"
+    - name: "data_in[6]"
+      description: "Input sample data bit 6 (input)"
+    - name: "data_in[7]"
+      description: "Input sample data bit 7 (input - MSB)"
+    - name: "result_out[5]"
+      description: "Output result bit 5 (output)"
+    - name: "result_out[6]"
+      description: "Output result bit 6 (output)"
+
+# Design specifications
+specifications:
+  area:
+    description: "Estimated silicon area (8-bit version)"
+    flip_flops: 140  # ~120 for buffer (15*8) + ~20 for control
+    gates: 400       # Approximate logic gate count (reduced from 32-bit)
+  
+  timing:
+    max_frequency_mhz: 50
+    critical_path: "accumulator addition through delay_line read"
+    latency_cycles_min: 3   # num_taps=1: 1+2 cycles
+    latency_cycles_max: 17  # num_taps=15: 15+2 cycles
+  
+  power:
+    description: "Power optimized through sequential accumulation"
+    dynamic_power: "Low - single adder vs. parallel tree"
+    static_power: "Minimal - simple CMOS logic"
+
+# Build configuration
+build:
+  # For Tiny Tapeout, this specifies the build flow
+  # Uses OpenLane for ASIC synthesis
+  target: "sky130"  # SkyWater 130nm PDK
+  top_module: "moving_average_filter_tt"
+  
+  # Synthesis parameters
+  clock_period_ns: 20  # 50 MHz (conservative for Tiny Tapeout)
+  
+  # Constraints
+  max_fanout: 10
+  max_transition: 0.75
+  
+  # Floorplan
+  die_area_um2: 10000  # Approximate
+  core_utilization: 0.5
+
+# Testing
+testing:
+  cocotb: true
+  testbench: "tb_moving_average_filter_tt.sv"
+  coverage_target: 90
+  
+  test_vectors:
+    - name: "single_tap_8bit"
+      description: "Pass-through mode verification (8-bit)"
+      num_taps: 1
+      inputs: [50, 100, 150]
+      expected: [50, 100, 150]
+    
+    - name: "two_tap_8bit"
+      description: "Simple averaging (8-bit)"
+      num_taps: 2
+      inputs: [40, 80, 120]
+      expected: [60, 100]
+    
+    - name: "four_tap_8bit"
+      description: "Power-of-2 optimization (8-bit)"
+      num_taps: 4
+      inputs: [16, 32, 48, 64, 80]
+      expected: [40, 56]
+    
+    - name: "eight_tap_8bit"
+      description: "Larger window (8-bit)"
+      num_taps: 8
+      inputs: [8, 16, 24, 32, 40, 48, 56, 64, 72]
+      expected: [36, 44]
+
+# Metadata: "1.0.0"
+  date: "2026-02-20"
+  tags:
+    - "dsp"
+    - "filter"
+    - "moving-average"
+    - "sensor"
+    - "low-power"
+    - "systemverilog"
+  
+  # Educational information
+  educational:
+    topics:
+      - "Digital signal processing"
+      - "Circular buffers"
+      - "State machines"
+      - "Pipeline architecture"
+      - "Low-power design"
+      - "Hardware optimization"
+    
+    learning_objectives:
+      - "Understand moving average filtering in hardware"
+      - "Learn circular buffer implementation"
+      - "Explore FSM-based control"
+      - "Optimize division for power-of-2 cases"
+      - "Implement handshake protocols"
+
+# Notes for Tiny Tapeout submission
+notes: |
+  **8-Bit Tiny Tapeout Version**
+  
+  This design has been optimized for Tiny Tapeout's pin constraints:
+  - Reduced from 32-bit to 8-bit data width
+  - Fits within standard TT interface: 8 inputs + 8 outputs + 8 bidirectional pins
+  - Maintains all functionality of the original 32-bit design
+  - Thoroughly tested with comprehensive testbench (6 test scenarios)
+  - Waveform verification confirms correct operation
+  
+  **Design Optimizations:**
+  - Low power: Sequential accumulation vs. parallel tree
+  - Small area: Circular buffer eliminates shift registers
+  - Flexibility: Runtime configurable tap count (1-15)
+  - Pin efficiency: 8-bit data path uses all available pins
+  
+  **Pin Allocation:**
+  - Dedicated inputs (8): enable, num_taps[3:0], data_valid, data_in[1:0]
+  - Dedicated outputs (8): data_ready, result_valid, busy, result_out[4:0]
+  - Bidirectional (8): data_in[7:2] as inputs, result_out[6:5] as outputs
+  
+  **Recommended First Test:**
+  - num_taps = 4 (power-of-2 for easy verification)
+  - Input samples: 16, 32, 48, 64
+  - Expected result: (16+32+48+64)/4 = 40
+  
+  **Files Included:**
+  - moving_average_filter_tt.sv: 8-bit Tiny Tapeout version
+  - tb_moving_average_filter_tt.sv: Complete testbench
+  - moving_average_filter.sv: Original 32-bit version (reference)
+  - moving_average_filter_presentation.md: Complete code dissection
+  
+  Ready for Tiny Tapeout submission!

@@ -10,6 +10,7 @@ paginate: true
 **Comprehensive Code Dissection**
 
 Authors: Jonathan Farah, Jason Qin
+Github Repository: git@github.com:jonathan-farah/Sensors_and_Security.git
 
 ---
 
